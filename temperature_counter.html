@@ -115,9 +115,13 @@
             if (fvalue == ""){
                 document.querySelector("#Cinput").value = ""
             }
-            if (parseInt(fvalue) > 1000 || parseInt(fvalue) < -1000) {
+            if (parseInt(fvalue) < -459.67) {
                 fvalue = 0
                 F.value = 0
+            }
+            if (parseInt(fvalue) > 1832) {
+                fvalue = 1832
+                F.value = 1832
             }
             // console.log(fvalue)
             document.querySelector("#Cinput").value = (parseInt(fvalue)-32)/1.8
