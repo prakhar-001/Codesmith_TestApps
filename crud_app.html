@@ -1,0 +1,247 @@
+<head>
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        main{
+            height: 352px;
+            width: 800px;
+            border: 1px solid;
+            border-radius: 16px;
+        }
+        header{
+            height: 76px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid;
+        }
+        h2{
+            height: 28px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .section-class{
+            height: 276px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .section-left{
+            width: 320px;
+            height: 228px;
+        }
+        .filter-div{
+            height: 66px;
+            gap: 6px;
+            display: flex;
+            flex-direction: column;
+
+        }
+        .filter-div label{
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .filter-div input{
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        .data-div{
+            border: 1px;
+            border-style: solid;
+            width: 320px;
+            height: 154px;
+        }
+        ul{
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        li{
+            list-style: none;
+        }
+        .section-right{
+            width: 416px;
+            height: 228px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .input{
+            height: 66px;
+            gap: 6px;
+            display: flex;
+            flex-direction: column;
+        }
+        .input label{
+            height: 20px;
+            font-size: 14px;
+        }
+        .input input{
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        button{
+            height: 40px;
+            width: 133.33px;
+            font-size: 16px;
+            border: 1px solid;
+            border-radius: 8px;
+        }
+        .selectedId {
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>CRU  D</h2>
+        </header>
+        <section class="section-class">
+            <section class="section-left">
+                <div class="filter-div">
+                    <label for="filter">Filter Prefix::</label>
+                    <input type="text" name="filter" id="filter" placeholder="Filter here">
+                </div>
+                <div class="data-div">
+                    <ul id="userlist">Data will be displayed here </ul>
+                </div>
+            </section>
+            <section class="section-right">
+                <div class="input">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" maxlength="20">
+                </div>
+                <div class="input">  
+                    <label for="surname">Surname:</label>
+                    <input type="text" name="surname" id="surname" maxlength="20">
+                </div>
+                <div>
+                    <button id="create">Create</button>
+                    <button id="update">Update</button>
+                    <button id="delete">Delete</button>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        nameElem = document.querySelector("#name")
+        surnameElem = document.querySelector("#surname")
+        userListElem = document.querySelector("#userlist")
+        filterElem = document.querySelector("#filter")  
+        
+        createButton = document.querySelector("#create")
+        updateButton = document.querySelector("#update")
+        deleteButton = document.querySelector("#delete")
+        
+        let selectedId = -1
+        var usersList = []
+        let filterValue = ''
+        let nameValue =''
+        let surnameValue = ''
+
+        handleChange()
+        function handleChange() {
+            nameValue = nameElem.value
+            surnameValue = surnameElem.value
+            filterValue = filterElem.value
+            deleteUiList()
+            createUiList()
+
+            // selectedId = -1
+
+            // Update button disable
+            if (selectedId > -1 && nameValue == usersList[selectedId].name && surnameValue  == usersList[selectedId].surname || (nameValue == '' || surnameValue == '') ){
+                updateButton.setAttribute("disabled", "true")
+            }else {
+                updateButton.removeAttribute("disabled")
+            }
+
+            // create and delete button disable
+            if (nameValue == '' || surnameValue == ''){
+                createButton.setAttribute("disabled", "true")
+                deleteButton.setAttribute("disabled", "true")
+            }else {
+                createButton.removeAttribute("disabled")
+                deleteButton.removeAttribute("disabled")
+            }
+        }
+
+        function deleteUiList() {
+            const listElem = document.querySelector("#userlist");
+            // delete all the childs of list till its empty
+            while (listElem.firstChild) {
+                listElem.removeChild(listElem.firstChild);
+            }
+        }
+
+        function createUiList() {
+            for(let i = 0; i<usersList.length; i++){
+                // if value is not matched then skip to next iteration
+                if (!usersList[i].surname.includes(filterValue)) {
+                    continue;
+                }
+                let para = document.createElement("li")
+                para.setAttribute("id", i);
+                para.addEventListener("click", function(){
+                    selectedId = i
+                    nameElem.value = usersList[i].name
+                    surnameElem.value = usersList[i].surname
+                    handleChange()
+                })
+                
+                if (i == selectedId){
+                    para.classList.add('selectedId')
+                }
+                const node = document.createTextNode(`${usersList[i].surname}, ${usersList[i].name}`);
+                para.appendChild(node);
+                userListElem.appendChild(para)
+                
+            }
+        }
+
+        nameElem.addEventListener("input", handleChange)
+        surnameElem.addEventListener("input", handleChange)
+        filterElem.addEventListener("input", handleChange)
+
+        createButton.addEventListener("click", function() {
+            let a = {
+                "name":nameValue,
+                "surname":surnameValue
+            }
+            usersList.push(a)
+            handleChange()            
+        })
+
+        deleteButton.addEventListener("click", function() {
+            usersList.splice(selectedId,1) 
+            selectedId = -1   
+            handleChange()       
+        })
+
+        updateButton.addEventListener('click',function() {
+            let a = {
+                "name":nameValue,
+                "surname":surnameValue
+            }
+            usersList[selectedId] = a
+            handleChange()
+        })
+    </script>
+</body>
+</html>
