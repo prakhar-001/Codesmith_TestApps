@@ -1,0 +1,137 @@
+<head>
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        main{
+            width: 416px;
+            height: 280px;
+            border: 1px solid;
+            border-radius: 16px;
+        }
+        header{
+            height: 76px;
+            border-bottom: 1px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h2{
+            height: 28px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        section{
+            height: 204px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+        }
+        time{
+            width: 368px;
+            height: 84px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            
+        }
+        .elapsed{
+            height: 44px;
+            width: 368px;
+            display: flex;
+            justify-content: space-between;
+        }
+        label{
+            font-size: 16px;
+        }
+        .elapsed_bar{
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: end;
+            justify-content: top;
+        }
+        .elapsed_bar progress, .duration input{
+            width: 250px;
+        }
+        .duration{
+            height: 24px;
+            width: 368px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button{
+            height: 48px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-size: 16px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <h2>Timer</h2>
+        </header>
+        <section>
+            <div class="time">
+                <div class="elapsed">
+                    <label for="elapsed_time">Elapsed Time:</label>
+                    <div class="elapsed_bar">
+                        <progress id="elapsed_time" value="0" max="30"></progress>
+                        <span class="ticker"></span>
+                    </div>
+                </div>
+                <div class="duration">
+                    <label for="duration_time"> Duration:</label>
+                    <input type="range" id="duration_time" name="points" min="0" max="30" value="15" step="0.1">
+                </div>
+            </div>
+            <button onclick=ResetTimer()>Reset Timer</button>
+        </section>
+    </main>
+
+    <script>
+        let initialTIme = new Date()
+        progressElem = document.querySelector("#elapsed_time")
+        durationElem = document.querySelector("#duration_time")
+
+        setInterval(function(){
+            let timeDiff = ( (new Date().getTime()) - (initialTIme.getTime()) )/1000
+            let timeDIFF = timeDiff.toFixed(1)
+
+            if(timeDIFF <= parseInt(durationElem.value)){
+                document.querySelector(".ticker").innerHTML = `${timeDIFF}s`
+                progressElem.value = parseInt(timeDIFF)
+            }
+        }, 100)
+
+        function ResetTimer() {
+            initialTIme = new Date()
+            progressElem.value = 0
+        }
+        handleChange()
+        function handleChange() {
+            setDuration = durationElem.value
+            progressElem.max = parseInt(durationElem.value)
+        }
+
+        document.querySelector("#duration_time").addEventListener('input', handleChange)
+    </script>
+</body>
+</html>
