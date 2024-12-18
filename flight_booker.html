@@ -1,0 +1,196 @@
+<head>
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        main{
+            width: 416px;
+            height: 340px;
+            border: 1px solid;
+            border-radius: 16px;
+        }
+        div{
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid;
+        }
+        h2{
+            height: 28px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        section{
+            height: 264px;
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            gap: 16px;
+        }
+        select{
+            height: 40px;
+            width: 368px;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 16px;
+        }
+        input{
+            height: 40px;
+            width: 368px;
+            outline: none;
+            border: 1px solid;
+            border-radius: 8px;
+            font-size: 16px;
+            padding: 8px 12px;
+        }
+        button{
+            height: 48px;
+            width: 368px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        .dateError{
+            border: 2px solid red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Commit3 -->
+    <main>
+        <div>
+            <h2>Flight Booker</h2>
+        </div>
+        <section>
+            <select id="way">
+                <option value="one-way-flight" selected>One-way-flight</option>
+                <option value="return-flight">Return flight</option>
+            </select>
+            <input id="Ddate" class="" type="text" value="" placeholder="Departure date">
+            <input id="Adate" class="" type="text" value="" placeholder="Return date" disabled>
+            <button>Book</button>
+        </section>
+    </main>
+
+    <script>
+        const date = new Date()
+        
+        let depDateInput = document.querySelector("#Ddate")
+        let arrDateInput = document.querySelector("#Adate")
+        let buttonInput = document.querySelector("button")
+        let dateDiff, monthDiff, yearDiff
+
+        presentDate = `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`
+        depDateInput.value = presentDate
+
+        // accepts data as string - "223455" and returns true if not a number
+        function isNumeric (str) {
+            let isNotNumber = Number.isNaN(Number(str))
+            return isNotNumber
+            // returns false for 12345
+            // returns true for 12345a
+        }
+
+        // Accepts data as - 12.08.2025
+        // retuns True for correct date format
+        function checkDateFormat (receivedDate) {
+            let date = receivedDate.split(".")
+            if (date[0].length != 2 || parseInt(date[0]) > 31 || date[1].length != 2 || parseInt(date[1]) > 12 || date[2].length != 4 || isNumeric(date[0]) || isNumeric(date[1])|| isNumeric(date[2])){
+                return false
+            } else {
+                if (parseInt(date[1]) == 2){
+                    if ((parseInt(date[2])%4 == 0) && (parseInt(date[0]) > 29)){
+                        return false
+                    } else if ((parseInt(date[2])%4 != 0) && (parseInt(date[0]) > 28)){
+                        return false
+                    }
+                } else if((parseInt(date[1]) == 4 || parseInt(date[1]) == 6 || parseInt(date[1]) == 9 || parseInt(date[1]) == 11) && (parseInt(date[0]) > 30)){
+                    return false
+                }
+                return true
+            }
+        }
+
+        // Compare dates and return if the first date <= second date 
+        // returns True for second > first
+        function compareDate (firstDate, secondDate) {
+            date1 = firstDate.split(".")
+            date2 = secondDate.split(".")
+
+            if(parseInt(date2[2]) < parseInt(date1[2])){
+                return false
+            } else if (parseInt(date2[2]) == parseInt(date1[2])){
+                if(parseInt(date2[1]) < parseInt(date1[1])){
+                    return false
+                } else if (parseInt(date2[1]) == parseInt(date1[1])){
+                    if(parseInt(date2[0]) < parseInt(date1[0])){
+                        return false
+                    } 
+                    return true
+                }
+                return true
+            }
+            return true
+        }
+
+        // check for Dep dates other than today
+        depDateInput.addEventListener('input', function(){
+            let Ddate = depDateInput.value
+
+            let compareValid = compareDate(presentDate, Ddate)
+            let validFormat = checkDateFormat(Ddate)
+
+            if (!compareValid || !validFormat){
+                depDateInput.classList.add("dateError")
+                buttonInput.setAttribute("disabled", true)
+            } else {
+                depDateInput.classList.remove("dateError")
+                buttonInput.removeAttribute("disabled")
+            }
+        })
+
+        // Arrival Input Validation and Check with dep date 
+        arrDateInput.addEventListener('input', function(){
+            let Adate = arrDateInput.value
+            let Ddate = depDateInput.value
+            
+            let validFormat = checkDateFormat(Adate)
+            let compareValid = compareDate(Ddate, Adate)
+
+            if (!compareValid || !validFormat){
+                arrDateInput.classList.add("dateError")
+                buttonInput.setAttribute("disabled", true)
+            } else {
+                arrDateInput.classList.remove("dateError")
+                buttonInput.removeAttribute("disabled")
+            } 
+        })
+
+
+        // function to track option selection and toggle arrival date button
+        document.querySelector("select").addEventListener('change', function(){
+            let selectedOption = document.querySelector("select").value
+            if (selectedOption == "return-flight") {
+                arrDateInput.value = depDateInput.value
+                document.querySelector("#Adate").removeAttribute("disabled")
+            } else {
+                arrDateInput.setAttribute("disabled", 'true')
+                arrDateInput.classList.remove("dateError")
+                arrDateInput.value = ""
+                buttonInput.removeAttribute("disabled")            
+            }
+        })
+    </script>
+</body>
+</html>
