@@ -99,7 +99,7 @@
                 </div>
                 <div class="duration">
                     <label for="duration_time"> Duration:</label>
-                    <input type="range" id="duration_time" name="points" min="0" max="30" value="15">
+                    <input type="range" id="duration_time" name="points" min="0" max="30" value="15" step="0.1">
                 </div>
             </div>
             <button onclick=ResetTimer()>Reset Timer</button>
@@ -117,8 +117,8 @@
 
             if(timeDIFF <= parseInt(durationElem.value)){
                 document.querySelector(".ticker").innerHTML = `${timeDIFF}s`
+                progressElem.value = parseInt(timeDIFF)
             }
-            progressElem.value = parseInt(timeDIFF)
         }, 100)
 
         function ResetTimer() {
