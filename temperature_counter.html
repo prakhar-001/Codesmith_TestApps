@@ -1,0 +1,136 @@
+<head>
+    <title>Temperature Converter</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        main{
+            border: 2px solid grey;
+            border-radius: 16px;
+            width: 416px;
+            height: 166px;
+        }
+        h2{
+            width: 416px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid;
+            text-align: center;
+            font-size: 28px;
+            padding: 24px 0;
+
+        }
+        input{
+            width: 120px;
+            height: 24px;
+            text-align: center;
+            border: none;
+            font-size: 16px;
+            flex-grow: inherit;
+            outline: none;
+            border: none;
+        }
+        section{
+            width: 416px;
+            height: 96px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .TempComp{
+            height: 42px;
+            width: 162.5px;
+            border: 1px solid rgb(192, 190, 190);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1px 6px;
+        }
+        .C{
+            width: 19px;
+            height: 24px;
+            font-size: 16px;
+        }
+        .F{
+            width: 17px;
+            height: 24px;
+            font-size: 16px;
+        }
+        .Equal{
+            width: 11px;
+            height: 24px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <!-- commit -->
+        <h2>TempConv</h2>
+        <section>
+            <div class="TempComp">
+                <input value="" type="number" id="Cinput"></input>
+                <p class="C">C</p>
+            </div>
+            <p class="Equal">=</p>
+            <div class="TempComp">
+                <input value="" type="number" id="Finput" ></input>
+                <p class="F">F</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let defaultValueC = 0
+        document.querySelector("#Cinput").value = defaultValueC
+        document.querySelector("#Finput").value = (defaultValueC * 1.8) + 32
+
+        document.querySelector("#Cinput").addEventListener("input", function(){
+            let C = document.querySelector("#Cinput")
+            let cvalue = C.value
+            if (cvalue == ""){
+                document.querySelector("#Finput").value = ""
+            }
+            if (parseInt(cvalue) > 1000 || parseInt(cvalue) < -1000){
+                cvalue = 0
+                C.value = 0
+            }
+            // console.log("cvalue ", cvalue)
+            document.querySelector("#Finput").value = (parseInt(cvalue)*1.8) + 32
+        })
+        
+        document.querySelector("#Finput").addEventListener("input", function(){
+            let F = document.querySelector("#Finput")
+            let fvalue = F.value
+            if (fvalue == ""){
+                document.querySelector("#Cinput").value = ""
+            }
+            if (parseInt(fvalue) < -459.67) {
+                fvalue = 0
+                F.value = 0
+            }
+            if (parseInt(fvalue) > 1832) {
+                fvalue = 1832
+                F.value = 1832
+            }
+            // console.log(fvalue)
+            document.querySelector("#Cinput").value = (parseInt(fvalue)-32)/1.8
+        })
+
+        
+        
+
+    </script>
+</body>
+</html>
