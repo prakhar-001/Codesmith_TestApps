@@ -107,7 +107,7 @@
                 C.value = 0
             }
             // console.log("cvalue ", cvalue)
-            document.querySelector("#Finput").value = (parseInt(cvalue)*1.8) + 32
+            document.querySelector("#Finput").value = ((parseInt(cvalue)*1.8) + 32).toFixed(2)
         })
         
         document.querySelector("#Finput").addEventListener("input", function(){
@@ -125,7 +125,7 @@
                 F.value = 1832
             }
             // console.log(fvalue)
-            document.querySelector("#Cinput").value = (parseInt(fvalue)-32)/1.8
+            document.querySelector("#Cinput").value = ((parseInt(fvalue)-32)/1.8).toFixed(2)
         })
 
         
